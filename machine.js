@@ -69,9 +69,9 @@ function generateMachineGrid(selection) {
           selectedblock.dataset.selected = "true";
           selectedblock.classList.add("selected");
         } else if (selectedblock.dataset.selected.includes("true")) {
-            selectedblock.dataset.selected = "false";
-            selectedblock.classList.remove("selected");
-          }
+          selectedblock.dataset.selected = "false";
+          selectedblock.classList.remove("selected");
+        }
       });
       line.appendChild(block);
       console.log("new block");
@@ -87,12 +87,29 @@ function readMachineSelection() {
   console.log(machineGrid);
   if (machineGrid.childElementCount > 0) {
     let machineGridLength = machineGrid.childElementCount;
+    let tab = new Array(machineGridLength);
     for (let i = 0; i < machineGridLength; i++) {
       let child = machineGrid.children[i];
       console.log(child);
       let childName = child.dataset.name;
       console.log(childName);
+      let tabLine = new Array(16);
+      for (let y = 0; y < 17; y++) {
+        let childblock = child.children[y];
+        if(y > 0) {
+            if(childblock.dataset.selected.includes("true")) {
+                tabLine[y] = true;
+            } else {
+                tabLine[y] = false;
+            }
+        } else {
+            tabLine[0] = childName;
+        }
+        
+      }
+      tab[i] = tabLine;
     }
+    return tab;
   }
 }
 
@@ -101,9 +118,13 @@ export function soundMachine() {
   data = readMachineSelection();
   const synth = new Tone.Synth().toDestination();
   const now = Tone.now();
-  for (let i = 0; i < 3; i++) {
-    synth.triggerAttackRelease("C4", "8n", now + i);
-    synth.triggerAttackRelease("E4", "8n", now + i + 0.4);
-    synth.triggerAttackRelease("G4", "8n", now + i + 0.8);
+  console.log(data);
+  for (let i = 0; i < data.length; i++) {
+    for (let y = 1; y < 17; y++) {
+        console.log(data[i][y]);
+        if(data[i][y] === true) {
+            synth.triggerAttackRelease(data[i][0], "8n", now + (i * 0.3) + (y * 0.02));
+        }
+    }
   }
 }
