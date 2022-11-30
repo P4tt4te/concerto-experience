@@ -5,6 +5,51 @@ const INSTRUMENTS = [
     name: "Synth",
     value: "synth",
     notes: ["C4", "E4", "E5", "F4", "G4", "J4"],
+    options: {
+      volume: -8,
+      detune: 0,
+      portamento: 0,
+      envelope: {
+        attack: 0.05,
+        attackCurve: "linear",
+        decay: 0.3,
+        decayCurve: "exponential",
+        release: 0.8,
+        releaseCurve: "exponential",
+        sustain: 0.4,
+      },
+      filter: {
+        Q: 1,
+        detune: 0,
+        frequency: 0,
+        gain: 0,
+        rolloff: -12,
+        type: "lowpass",
+      },
+      filterEnvelope: {
+        attack: 0.001,
+        attackCurve: "linear",
+        decay: 0.7,
+        decayCurve: "exponential",
+        release: 0.8,
+        releaseCurve: "exponential",
+        sustain: 0.1,
+        baseFrequency: 300,
+        exponent: 2,
+        octaves: 4,
+      },
+      oscillator: {
+        detune: 0,
+        frequency: 440,
+        partialCount: 8,
+        partials: [
+          1.2732395447351628, 0, 0.4244131815783876, 0, 0.25464790894703254, 0,
+          0.18189136353359467, 0,
+        ],
+        phase: 0,
+        type: "square8",
+      },
+    },
   },
   {
     name: "fmSynth",
@@ -96,16 +141,15 @@ function readMachineSelection() {
       let tabLine = new Array(16);
       for (let y = 0; y < 17; y++) {
         let childblock = child.children[y];
-        if(y > 0) {
-            if(childblock.dataset.selected.includes("true")) {
-                tabLine[y] = true;
-            } else {
-                tabLine[y] = false;
-            }
+        if (y > 0) {
+          if (childblock.dataset.selected.includes("true")) {
+            tabLine[y] = true;
+          } else {
+            tabLine[y] = false;
+          }
         } else {
-            tabLine[0] = childName;
+          tabLine[0] = childName;
         }
-        
       }
       tab[i] = tabLine;
     }
@@ -116,15 +160,19 @@ function readMachineSelection() {
 export function soundMachine() {
   let data = [];
   data = readMachineSelection();
-  const synth = new Tone.Synth().toDestination();
+  const synth = new Tone.MonoSynth(INSTRUMENTS[0].options).toDestination();
   const now = Tone.now();
+  let status = true;
   console.log(data);
-  for (let i = 0; i < data.length; i++) {
-    for (let y = 1; y < 17; y++) {
-        console.log(data[i][y]);
-        if(data[i][y] === true) {
-            synth.triggerAttackRelease(data[i][0], "8n", now + (i * 0.3) + (y * 0.02));
-        }
+  document
+    .querySelector("#machine-pause")
+    .addEventListener("click", () => (status = false));
+  for (let y = 1; y < 17; y++) {
+    for (let i = 0; i < data.length; i++) {
+      console.log(data[i][y]);
+      if (data[i][y] === true) {
+        synth.triggerAttackRelease(data[i][0], "8n", now + y * 0.2 + i * 0.001);
+      }
     }
   }
 }
