@@ -4,7 +4,7 @@ const INSTRUMENTS = [
   {
     name: "Synth",
     value: "synth",
-    notes: ["C4", "E4", "E5", "F4", "G4", "J4"],
+    notes: ["A4", "B4", "C4", "E4", "F4", "G4"],
     options: {
       volume: -8,
       detune: 0,
@@ -160,19 +160,26 @@ function readMachineSelection() {
 export function soundMachine() {
   let data = [];
   data = readMachineSelection();
-  const synth = new Tone.MonoSynth(INSTRUMENTS[0].options).toDestination();
-  const now = Tone.now();
-  let status = true;
+  let synth = new Tone.MonoSynth(INSTRUMENTS[0].options).toDestination();
   console.log(data);
-  document
-    .querySelector("#machine-pause")
-    .addEventListener("click", () => (status = false));
-  for (let y = 1; y < 17; y++) {
-    for (let i = 0; i < data.length; i++) {
-      console.log(data[i][y]);
-      if (data[i][y] === true) {
-        synth.triggerAttackRelease(data[i][0], "8n", now + y * 0.2 + i * 0.001);
+  document.querySelector("#machine-pause").addEventListener("click", () => {
+    Tone.Transport.stop();
+    Tone.Transport.cancel(0);
+  });
+
+  new Tone.Loop((time) => {
+    for (let y = 1; y < 17; y++) {
+      for (let i = 0; i < data.length; i++) {
+        console.log(data[i][y]);
+        if (data[i][y] === true) {
+          synth.triggerAttackRelease(
+            data[i][0],
+            "8n",
+            time + y * 0.2 + i * 0.001
+          );
+        }
       }
     }
-  }
+  }, Tone.Time(3.2).toSeconds()).start(0);
+  Tone.Transport.start();
 }
