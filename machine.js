@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { sendTimelineBlock } from "./main";
+import { sendTimelineBlock, exportTimeline } from "./main";
 
 const INSTRUMENTS = [
   {
@@ -181,19 +181,13 @@ function readMachineSelection(type, instrument) {
   if (type && type.includes("timeline")) {
     switch (instrument) {
       case "synth":
-        machineGrid = document.querySelector(
-          "#timeline-content-synth .timeline-card-content"
-        );
+        machineGrid = exportTimeline("synth");
         break;
       case "conga":
-        machineGrid = document.querySelector(
-          "#timeline-content-conga .timeline-card-content"
-        );
+        machineGrid = exportTimeline("conga");
         break;
       case "drums":
-        machineGrid = document.querySelector(
-          "#timeline-content-drums .timeline-card-content"
-        );
+        machineGrid = exportTimeline("drums");
         break;
     }
   } else {
@@ -202,11 +196,37 @@ function readMachineSelection(type, instrument) {
   console.log(machineGrid);
 
   let tab;
-  if(type && type.includes("timeline")) {
-
+  if (type && type.includes("timeline")) {
+    console.log(machineGrid.length);
+    tab = new Array();
+    for (let i = 0; i < machineGrid.length; i++) {
+      let card = readAllCards(machineGrid[i]);
+      tab.push(card);
+    }
   } else {
     tab = readCard(machineGrid);
+  }
+  return tab;
+}
+
+//recupère les données des cartes de la timeline
+function readAllCards(machineGrid) {
+  if (machineGrid.length > 0) {
+    let machineGridLength = machineGrid.length;
+    let tab = new Array(machineGridLength);
+    for (let i = 0; i < machineGridLength; i++) {
+      console.log("boucle");
+      let child = machineGrid[i];
+      console.log(child);
+      let tabLine = new Array(16);
+      for (let y = 1; y < 17; y++) {
+        tabLine[y - 1] = child;
+      }
+      tab[i] = tabLine;
+    }
     return tab;
+  } else {
+    return null;
   }
 }
 
@@ -406,6 +426,19 @@ function sendMachineData() {
 
 //genere le son de la timeline
 function soundTimeline() {
-  let data = readMachineSelection("timeline", "conga");
-  let instrument = "conga";
+  let datasynth = readMachineSelection("timeline", "synth");
+  let dataconga = readMachineSelection("timeline", "conga");
+  let datadrums = readMachineSelection("timeline", "drums");
+  console.log(datasynth);
+  console.log(dataconga);
+  console.log(datadrums);
+
+  document
+    .querySelector("#machine-pause")
+    .addEventListener("click", stopMachine);
+  document.querySelector("#addButton").addEventListener("click", stopMachine);
+
+  
+
+  //TODO jouer la machine avec les datas
 }

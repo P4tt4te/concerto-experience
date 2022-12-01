@@ -34,12 +34,24 @@ function getTimeline(type, timelinedata) {
       break;
     case "conga":
       congaTimeline = timelinedata;
+      console.log(congaTimeline);
       break;
     case "drums":
       drumsTimeline = timelinedata;
       break;
   }
   generateTimeline(type);
+}
+
+export function exportTimeline(type) {
+  switch (type) {
+    case "synth":
+      return synthTimeline;
+    case "conga":
+      return congaTimeline;
+    case "drums":
+      return drumsTimeline;
+  }
 }
 
 function addTimeline(type, data) {
