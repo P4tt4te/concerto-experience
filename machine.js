@@ -64,9 +64,34 @@ const INSTRUMENTS = [
       "Valve7",
     ],
   },
+  {
+    name: "Drums",
+    value: "drums",
+    notes: ["Tom 1", "Tom 2", "Tom 3", "Hi-Hat", "Snare", "Kick"],
+  },
+];
+const DRUMS_KIT_LIST = [
+  "4OP-FM",
+  "acoustic-kit",
+  "Bongos",
+  "breakbeat8",
+  "breakbeat9",
+  "breakbeat13",
+  "CR78",
+  "Kit3",
+  "Kit8",
+  "KPR77",
+  "LINN",
+  "loops",
+  "R8",
+  "Stark",
+  "Techno",
+  "TheCheebacabra1",
+  "TheCheebacabra2",
 ];
 let INSTRUMENT_SELECTION = "";
 let INSTRUMENT_CONFIGURATION = null;
+let DRUMS_KIT = "breakbeat13";
 
 export async function initSound() {
   await Tone.start();
@@ -176,46 +201,103 @@ function instrumentConfiguration() {
     case "conga":
       instrument = new Tone.Players().toDestination();
       instrument.add(
-        "1",
+        "Valve1",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve1.wav", () => {
           console.log("loaded");
         })
       );
       instrument.add(
-        "2",
+        "Valve2",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve2.wav", () => {
           console.log("loaded");
         })
       );
       instrument.add(
-        "3",
+        "Valve3",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve3.wav", () => {
           console.log("loaded");
         })
       );
       instrument.add(
-        "4",
+        "Valve4",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve4.wav", () => {
           console.log("loaded");
         })
       );
       instrument.add(
-        "5",
+        "Valve5",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve5.wav", () => {
           console.log("loaded");
         })
       );
       instrument.add(
-        "6",
+        "Valve6",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve6.wav", () => {
           console.log("loaded");
         })
       );
       instrument.add(
-        "7",
+        "Valve7",
         new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve7.wav", () => {
           console.log("loaded");
         })
+      );
+      break;
+    case "drums":
+      instrument = new Tone.Players().toDestination();
+      instrument.add(
+        "Tom 1",
+        new Tone.ToneAudioBuffer(
+          "./sounds/Drums/" + DRUMS_KIT + "/tom1.wav",
+          () => {
+            console.log("loaded");
+          }
+        )
+      );
+      instrument.add(
+        "Tom 2",
+        new Tone.ToneAudioBuffer(
+          "./sounds/Drums/" + DRUMS_KIT + "/tom2.wav",
+          () => {
+            console.log("loaded");
+          }
+        )
+      );
+      instrument.add(
+        "Tom 3",
+        new Tone.ToneAudioBuffer(
+          "./sounds/Drums/" + DRUMS_KIT + "/tom3.wav",
+          () => {
+            console.log("loaded");
+          }
+        )
+      );
+      instrument.add(
+        "Hi-Hat",
+        new Tone.ToneAudioBuffer(
+          "./sounds/Drums/" + DRUMS_KIT + "/hihat.wav",
+          () => {
+            console.log("loaded");
+          }
+        )
+      );
+      instrument.add(
+        "Snare",
+        new Tone.ToneAudioBuffer(
+          "./sounds/Drums/" + DRUMS_KIT + "/snare.wav",
+          () => {
+            console.log("loaded");
+          }
+        )
+      );
+      instrument.add(
+        "Kick",
+        new Tone.ToneAudioBuffer(
+          "./sounds/Drums/" + DRUMS_KIT + "/kick.wav",
+          () => {
+            console.log("loaded");
+          }
+        )
       );
       break;
   }
@@ -242,17 +324,19 @@ export function soundMachine() {
               instrument.triggerAttackRelease(
                 data[i][0],
                 "8n",
-                time + y * 0.2 + i * 0.001
+                time + y * 0.1 + i * 0.001
               );
               break;
             case "conga":
-              let index = data[i][0].split("").pop();
-              instrument.player(index).start(time + y * 0.2 + i * 0.001);
+              instrument.player(data[i][0]).start(time + y * 0.15 + i * 0.001);
+              break;
+            case "drums":
+              instrument.player(data[i][0]).start(time + y * 0.15 + i * 0.001);
               break;
           }
         }
       }
     }
-  }, Tone.Time(3.2).toSeconds()).start(0);
+  }, Tone.Time(2.4).toSeconds()).start(0);
   Tone.Transport.start();
 }
