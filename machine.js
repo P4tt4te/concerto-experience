@@ -103,10 +103,18 @@ export async function initSound() {
   document
     .querySelector("#machine-play")
     .addEventListener("click", soundMachine);
-    document.querySelector("#machine-save").addEventListener("click", sendMachineData);
-    document.querySelector("#addButton").addEventListener("click",() => {
-      document.querySelector("#machine").classList.toggle("on");
-    })
+  document
+    .querySelector("#machine-save")
+    .addEventListener("click", sendMachineData);
+  document.querySelector("#addButton").addEventListener("click", () => {
+    document.querySelector("#machine").classList.toggle("on");
+  });
+  document
+    .querySelector("#timelinePlay")
+    .addEventListener("click", soundTimeline);
+  document
+    .querySelector("#timelinePause")
+    .addEventListener("click", stopMachine);
 }
 
 //lit l'instrument selectionné et vérifie si il existe
@@ -167,9 +175,43 @@ function generateMachineGrid(selection) {
 }
 
 //lit les blocks selectionnés de la machine et joue le son
-function readMachineSelection() {
-  let machineGrid = document.querySelector(".machine-grid");
+function readMachineSelection(type, instrument) {
+  let machineGrid;
+
+  if (type && type.includes("timeline")) {
+    switch (instrument) {
+      case "synth":
+        machineGrid = document.querySelector(
+          "#timeline-content-synth .timeline-card-content"
+        );
+        break;
+      case "conga":
+        machineGrid = document.querySelector(
+          "#timeline-content-conga .timeline-card-content"
+        );
+        break;
+      case "drums":
+        machineGrid = document.querySelector(
+          "#timeline-content-drums .timeline-card-content"
+        );
+        break;
+    }
+  } else {
+    machineGrid = document.querySelector(".machine-grid");
+  }
   console.log(machineGrid);
+
+  let tab;
+  if(type && type.includes("timeline")) {
+
+  } else {
+    tab = readCard(machineGrid);
+    return tab;
+  }
+}
+
+//recupère la donnée de 1 carte de son
+function readCard(machineGrid) {
   if (machineGrid.childElementCount > 0) {
     let machineGridLength = machineGrid.childElementCount;
     let tab = new Array(machineGridLength);
@@ -194,6 +236,8 @@ function readMachineSelection() {
       tab[i] = tabLine;
     }
     return tab;
+  } else {
+    return null;
   }
 }
 
@@ -310,16 +354,21 @@ function instrumentConfiguration() {
   INSTRUMENT_CONFIGURATION = instrument;
 }
 
+function stopMachine() {
+  Tone.Transport.stop();
+  Tone.Transport.cancel(0);
+}
+
 //génère le son en fonction des choix de l'utilisateur
 function soundMachine() {
   let data = [];
   let instrument = INSTRUMENT_CONFIGURATION;
   data = readMachineSelection();
   console.log(data);
-  document.querySelector("#machine-pause").addEventListener("click", () => {
-    Tone.Transport.stop();
-    Tone.Transport.cancel(0);
-  });
+  document
+    .querySelector("#machine-pause")
+    .addEventListener("click", stopMachine);
+  document.querySelector("#addButton").addEventListener("click", stopMachine);
 
   new Tone.Loop((time) => {
     for (let y = 1; y < 17; y++) {
@@ -352,5 +401,11 @@ function sendMachineData() {
   console.log("sendMachineData");
   let data = readMachineSelection();
   console.log(data);
-  sendTimelineBlock(INSTRUMENT_SELECTION,data);
+  sendTimelineBlock(INSTRUMENT_SELECTION, data);
+}
+
+//genere le son de la timeline
+function soundTimeline() {
+  let data = readMachineSelection("timeline", "conga");
+  let instrument = "conga";
 }

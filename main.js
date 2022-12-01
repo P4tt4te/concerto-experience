@@ -114,6 +114,9 @@ export function sendTimelineBlock(type, data) {
   });
 }
 
-document.querySelector("#soundButton")?.addEventListener("click", async () => {
-  initSound();
-});
+document.querySelector("#soundButton")?.addEventListener("click", startMachine);
+
+async function startMachine() {
+  await initSound();
+  document.querySelector("#soundButton")?.removeEventListener("click", startMachine);
+}
