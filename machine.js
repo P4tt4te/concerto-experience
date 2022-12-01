@@ -1,4 +1,5 @@
 import * as Tone from "tone";
+import { sendTimelineBlock } from "./main";
 
 const INSTRUMENTS = [
   {
@@ -102,6 +103,7 @@ export async function initSound() {
   document
     .querySelector("#machine-play")
     .addEventListener("click", soundMachine);
+    document.querySelector("#machine-save").addEventListener("click", sendMachineData);
     document.querySelector("#addButton").addEventListener("click",() => {
       document.querySelector("#machine").classList.toggle("on");
     })
@@ -195,6 +197,7 @@ function readMachineSelection() {
   }
 }
 
+//configure la machine en fonction de l'instrument choisi
 function instrumentConfiguration() {
   let instrument;
   switch (INSTRUMENT_SELECTION) {
@@ -307,7 +310,8 @@ function instrumentConfiguration() {
   INSTRUMENT_CONFIGURATION = instrument;
 }
 
-export function soundMachine() {
+//génère le son en fonction des choix de l'utilisateur
+function soundMachine() {
   let data = [];
   let instrument = INSTRUMENT_CONFIGURATION;
   data = readMachineSelection();
@@ -320,7 +324,6 @@ export function soundMachine() {
   new Tone.Loop((time) => {
     for (let y = 1; y < 17; y++) {
       for (let i = 0; i < data.length; i++) {
-        console.log(data[i][y]);
         if (data[i][y] === true) {
           switch (INSTRUMENT_SELECTION) {
             case "synth":
@@ -342,4 +345,12 @@ export function soundMachine() {
     }
   }, Tone.Time(2.4).toSeconds()).start(0);
   Tone.Transport.start();
+}
+
+//envoie la selection de l'utilisateur au serveur
+function sendMachineData() {
+  console.log("sendMachineData");
+  let data = readMachineSelection();
+  console.log(data);
+  sendTimelineBlock(INSTRUMENT_SELECTION,data);
 }
