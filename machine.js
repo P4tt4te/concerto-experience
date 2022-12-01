@@ -52,12 +52,21 @@ const INSTRUMENTS = [
     },
   },
   {
-    name: "fmSynth",
-    value: "fmsynth",
-    notes: ["C4", "E4", "E5", "F4", "G4", "J4", "TEST"],
+    name: "Conga",
+    value: "conga",
+    notes: [
+      "Valve1",
+      "Valve2",
+      "Valve3",
+      "Valve4",
+      "Valve5",
+      "Valve6",
+      "Valve7",
+    ],
   },
 ];
 let INSTRUMENT_SELECTION = "";
+let INSTRUMENT_CONFIGURATION = null;
 
 export async function initSound() {
   await Tone.start();
@@ -79,6 +88,7 @@ function readInstrumentSelection() {
   }
   INSTRUMENT_SELECTION = block.value;
   generateMachineGrid(INSTRUMENT_SELECTION);
+  instrumentConfiguration();
 }
 
 //génère la grille de la machine en fonction de l'instrument selectionné
@@ -157,10 +167,65 @@ function readMachineSelection() {
   }
 }
 
+function instrumentConfiguration() {
+  let instrument;
+  switch (INSTRUMENT_SELECTION) {
+    case "synth":
+      instrument = new Tone.MonoSynth(INSTRUMENTS[0].options).toDestination();
+      break;
+    case "conga":
+      instrument = new Tone.Players().toDestination();
+      instrument.add(
+        "1",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve1.wav", () => {
+          console.log("loaded");
+        })
+      );
+      instrument.add(
+        "2",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve2.wav", () => {
+          console.log("loaded");
+        })
+      );
+      instrument.add(
+        "3",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve3.wav", () => {
+          console.log("loaded");
+        })
+      );
+      instrument.add(
+        "4",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve4.wav", () => {
+          console.log("loaded");
+        })
+      );
+      instrument.add(
+        "5",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve5.wav", () => {
+          console.log("loaded");
+        })
+      );
+      instrument.add(
+        "6",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve6.wav", () => {
+          console.log("loaded");
+        })
+      );
+      instrument.add(
+        "7",
+        new Tone.ToneAudioBuffer("./sounds/Conga/Conga_MF_Valve7.wav", () => {
+          console.log("loaded");
+        })
+      );
+      break;
+  }
+  INSTRUMENT_CONFIGURATION = instrument;
+}
+
 export function soundMachine() {
   let data = [];
+  let instrument = INSTRUMENT_CONFIGURATION;
   data = readMachineSelection();
-  let synth = new Tone.MonoSynth(INSTRUMENTS[0].options).toDestination();
   console.log(data);
   document.querySelector("#machine-pause").addEventListener("click", () => {
     Tone.Transport.stop();
@@ -172,11 +237,19 @@ export function soundMachine() {
       for (let i = 0; i < data.length; i++) {
         console.log(data[i][y]);
         if (data[i][y] === true) {
-          synth.triggerAttackRelease(
-            data[i][0],
-            "8n",
-            time + y * 0.2 + i * 0.001
-          );
+          switch (INSTRUMENT_SELECTION) {
+            case "synth":
+              instrument.triggerAttackRelease(
+                data[i][0],
+                "8n",
+                time + y * 0.2 + i * 0.001
+              );
+              break;
+            case "conga":
+              let index = data[i][0].split("").pop();
+              instrument.player(index).start(time + y * 0.2 + i * 0.001);
+              break;
+          }
         }
       }
     }
