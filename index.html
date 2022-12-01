@@ -4,13 +4,31 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Online Drums Machine</title>
   </head>
   <body>
     <div id="app">
       <nav id="sidebar">
-        <button id="soundButton">Start machine</button>
+        <h1>Online Sound Machine</h1>
       </nav>
+      <div id="toolbar">
+        <button id="soundButton">Start</button>
+        <button>Play</button>
+        <button>Pause</button>
+        <button>Add a sound</button>
+      </div>
+      <div id="timeline">
+        <div id="timeline-legend">
+          <p>Synth</p>
+          <p>Conga</p>
+          <p>Drums</p>
+        </div>
+        <div id="timeline-content">
+          <div id="timeline-content-synth"></div>
+          <div id="timeline-content-conga"></div>
+          <div id="timeline-content-drums"></div>
+        </div>
+      </div>
       <div id="machine">
         <div>
           <label for="instrument-selector">Selectionne ton instrument :</label>

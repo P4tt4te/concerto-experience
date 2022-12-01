@@ -1,5 +1,10 @@
+@font-face {
+  font-family: "VG5000";
+  src: url("fonts/VG5000-Regular.otf") format("opentype");
+}
+
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "VG5000", Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
@@ -29,8 +34,8 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2em;
+  margin: 0;
 }
 
 #app {
@@ -45,9 +50,22 @@ h1 {
 }
 
 nav {
-  width: 100%;
   background: grey;
   height: 50px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+#toolbar {
+  position: fixed;
+  bottom: 10px;
+  left: calc(50% - 200px);
+  border-radius: 1rem;
+  display: flex;
+  background: red;
+  gap: 10px;
+  padding: 5px;
 }
 
 button {
