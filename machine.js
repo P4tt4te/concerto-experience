@@ -102,6 +102,9 @@ export async function initSound() {
   document
     .querySelector("#machine-play")
     .addEventListener("click", soundMachine);
+    document.querySelector("#addButton").addEventListener("click",() => {
+      document.querySelector("#machine").classList.toggle("on");
+    })
 }
 
 //lit l'instrument selectionné et vérifie si il existe

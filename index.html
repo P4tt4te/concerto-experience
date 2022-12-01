@@ -10,12 +10,13 @@
     <div id="app">
       <nav id="sidebar">
         <h1>Online Sound Machine</h1>
+        <p>Number of users : <span id="numberOfUsers">0</span></p>
       </nav>
       <div id="toolbar">
         <button id="soundButton">Start</button>
         <button>Play</button>
         <button>Pause</button>
-        <button>Add a sound</button>
+        <button id="addButton">Add a sound</button>
       </div>
       <div id="timeline">
         <div id="timeline-legend">
@@ -24,9 +25,52 @@
           <p>Drums</p>
         </div>
         <div id="timeline-content">
-          <div id="timeline-content-synth"></div>
-          <div id="timeline-content-conga"></div>
-          <div id="timeline-content-drums"></div>
+          <div id="timeline-content-synth">
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+          </div>
+          <div id="timeline-content-conga">
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+          </div>
+          <div id="timeline-content-drums">
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+            <div class="timeline-card">
+              <div class="timeline-card-content"></div>
+              <span>Pseudo</span>
+            </div>
+          </div>
         </div>
       </div>
       <div id="machine">
@@ -37,14 +81,13 @@
             <option value="synth">Synth</option>
             <option value="conga">Conga</option>
             <option value="drums">Drums</option>
-        </select>
+          </select>
         </div>
-        <div class="machine-grid">
-        </div>
+        <div class="machine-grid"></div>
         <button id="machine-play">Play</button>
         <button id="machine-pause">Pause</button>
+        <button id="machine-save">Send on Timeline</button>
       </div>
-
     </div>
     <script type="module" src="/main.js"></script>
   </body>
