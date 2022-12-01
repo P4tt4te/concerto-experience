@@ -27,22 +27,23 @@ function updateNumberOfUsers(arg) {
 }
 
 function getTimeline(type, timelinedata) {
+  console.log(timelinedata);
   switch (type) {
     case "synth":
       synthTimeline = timelinedata;
       break;
     case "conga":
-      console.log(timelinedata);
       congaTimeline = timelinedata;
-      generateTimeline("conga");
       break;
     case "drums":
       drumsTimeline = timelinedata;
       break;
   }
+  generateTimeline(type);
 }
 
 function addTimeline(type, data) {
+  console.log("addTimeline");
   switch (type) {
     case "synth":
       synthTimeline.push(data);
