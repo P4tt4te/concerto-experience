@@ -407,7 +407,7 @@ function soundMachine() {
               instrument.triggerAttackRelease(
                 data[i][0],
                 "8n",
-                time + y * 0.1 + i * 0.001
+                time + y * 0.15 + i * 0.001
               );
               break;
             case "conga":
@@ -451,34 +451,61 @@ function soundTimeline() {
     .addEventListener("click", stopMachine);
   document.querySelector("#addButton").addEventListener("click", stopMachine);
 
+  let cardIndex = 0;
+  let loop = 0;
+
   new Tone.Loop((time) => {
-    console.log("loop");
-    for (let i = 0; i < highestlength; i++) {
-      console.log("card");
-      for (let y = 1; y < 17; y++) {
-        if (i < congalength) {
-          for (let z = 0; z < dataconga[i].length; z++) {
-            for (let h = 0; h < 7; h++) {
-              if (dataconga[i][z][h][y] === true) {
-                CONGA_CONFIGURATION.player(dataconga[i][z][h][0]).start(
-                  time + i * 2.4 + y * 0.15 + h * 0.001
-                );
-              }
+    console.log("card");
+    for (let y = 1; y < 17; y++) {
+      // TODO: a debug
+      if (synthlength === -1) {
+        for (let z = 0; z < datasynth[cardIndex].length; z++) {
+          for (let h = 0; h < 6; h++) {
+            console.log(datasynth[cardIndex][z][h]);
+            if (datasynth[cardIndex][z][h][y] === true) {
+              SYNTH_CONFIGURATION.triggerAttackRelease(
+                datasynth[cardIndex][z][h][0],
+                "8n",
+                time + y * 0.15 + h * 0.001
+              );
+              console.log("synth");
+              console.log(time + y * 0.15 + h * 0.001);
             }
           }
         }
-        if (i === -1) {
-          for (let z = 0; z < datadrums[i].length; z++) {
-            for (let h = 0; h < 6; h++) {
-              if (datadrums[i][z][h][y] === true) {
-                let player = DRUMS_CONFIGURATION.player(datadrums[i][z][h][0]);
-                player.start(time + i * 2.4 + y * 0.15 + h * 0.001 + 0.007);
-              }
+      }
+      if (cardIndex < congalength) {
+        for (let z = 0; z < dataconga[cardIndex].length; z++) {
+          for (let h = 0; h < 7; h++) {
+            if (dataconga[cardIndex][z][h][y] === true) {
+              CONGA_CONFIGURATION.player(dataconga[cardIndex][z][h][0]).start(
+                time + y * 0.15 + h * 0.001 + 0.006
+              );
+              console.log("conga");
+              console.log(time + y * 0.15 + h * 0.001 + 0.006);
+            }
+          }
+        }
+      }
+      if (cardIndex < drumslength) {
+        for (let z = 0; z < datadrums[cardIndex].length; z++) {
+          for (let h = 0; h < 6; h++) {
+            if (datadrums[cardIndex][z][h][y] === true) {
+              let player = DRUMS_CONFIGURATION.player(
+                datadrums[cardIndex][z][h][0]
+              );
+              player.start(time + y * 0.15 + h * 0.001 + 0.015);
+              console.log("drums");
+              console.log(time + y * 0.15 + h * 0.001 + 0.015);
             }
           }
         }
       }
     }
-  }, Tone.Time(2.4 * highestlength).toSeconds()).start(0);
+    cardIndex++;
+    if (cardIndex >= highestlength) {
+      cardIndex = 0;
+    }
+  }, Tone.Time(2.6).toSeconds()).start(0);
   Tone.Transport.start();
 }
