@@ -11,7 +11,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -44,7 +44,7 @@ h1 {
   left: 0;
   bottom: 0;
   right: 0;
-  background: black;
+  background: white;
   margin: 0;
   text-align: center;
 }
@@ -56,21 +56,38 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 0px 10px;
+  filter: drop-shadow(20px 10px 0px black);
 }
 
 #toolbar {
   position: fixed;
   bottom: 10px;
   left: calc(50% - 200px);
-  border-radius: 1rem;
   display: flex;
-  background: red;
+  background: grey;
   gap: 10px;
   padding: 5px 8px;
+  filter: drop-shadow(10px 10px 0px black);
+}
+
+#timebar {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.timebar-block {
+  width: 10px;
+  height: 10px;
+  background-color: black;
+}
+
+.timebar-block.active {
+  background-color: white;
 }
 
 button {
-  border-radius: 12px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
@@ -81,11 +98,19 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: white;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+button.off {
+  background-color: red;
+}
+
+button.on {
+  background-color: green;
 }
 
 /* timeline style */
@@ -94,6 +119,7 @@ button:focus-visible {
   display: flex;
   height: 300px;
   margin-top: 100px;
+  filter: drop-shadow(10px 10px 0px black);
 }
 
 #timeline-legend {
@@ -131,7 +157,6 @@ button:focus-visible {
   height: calc(100% - 10px);
   width: 190px;
   background: orange;
-  border-radius: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -146,7 +171,6 @@ button:focus-visible {
 .timeline-card-block {
   width: 5px;
   height: 5px;
-  border-radius: 4px;
 }
 
 .timeline-card-block.selected {
@@ -159,9 +183,8 @@ button:focus-visible {
   position: fixed;
   left: 30%;
   bottom: -2000px;
-  background: red;
+  background: gray;
   padding: 5px 10px;
-  border-radius: 12px;
 }
 
 #machine.on {
@@ -170,13 +193,15 @@ button:focus-visible {
 
 .machine-grid {
   display: flex;
+  gap: 5px;
+  padding: 5px 0px;
   flex-direction: column;
   align-items: center;
 }
 
 .machine-grid-line {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   margin-bottom: 5px;
 }
 
@@ -187,7 +212,7 @@ button:focus-visible {
 }
 
 .machine-grid-block.selected {
-  background: green;
+  background: white;
 }
 
 @media (prefers-color-scheme: light) {

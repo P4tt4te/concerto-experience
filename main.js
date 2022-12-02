@@ -119,11 +119,23 @@ function generateTimeline(type) {
 }
 
 export function sendTimelineBlock(type, data) {
-  console.log("sendTimelineBlock");
   socket.emit("addTimeline", {
     type: type,
     data: data,
   });
+}
+
+export function nextanim() {
+  let blocks = document.querySelectorAll("#timebar .timebar-block");
+  let times = 0;
+  let interval = setInterval(anim,150);
+  function anim() {
+    blocks[times].classList.toggle("active");
+    times++;
+    if(times > 15) {
+      clearInterval(interval);
+    }
+  }
 }
 
 document.querySelector("#soundButton")?.addEventListener("click", startMachine);

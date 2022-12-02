@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import { sendTimelineBlock, exportTimeline } from "./main";
+import { sendTimelineBlock, exportTimeline, nextanim } from "./main";
 
 const INSTRUMENTS = [
   {
@@ -118,6 +118,9 @@ export async function initSound() {
   document
     .querySelector("#timelinePause")
     .addEventListener("click", stopMachine);
+  let startBtn = document.querySelector("#soundButton");
+  startBtn.classList.add("on");
+  startBtn.classList.remove("off");
   SYNTH_CONFIGURATION = instrumentConfiguration("synth");
   CONGA_CONFIGURATION = instrumentConfiguration("conga");
   DRUMS_CONFIGURATION = instrumentConfiguration("drums");
@@ -126,7 +129,6 @@ export async function initSound() {
 //lit l'instrument selectionné et vérifie si il existe
 function readInstrumentSelection() {
   let block = document.querySelector("#instrument-selector");
-  console.log(block.value);
   if (block.value === "") {
     block.value = "synth";
   }
@@ -140,9 +142,8 @@ function generateMachineGrid(selection) {
   const parent = document.querySelector(".machine-grid");
   let objSelection = INSTRUMENTS.filter((item) => item.value === selection);
   let notes = objSelection[0].notes;
-  console.log(notes);
   let noteslength = notes.length;
-  console.log(noteslength);
+  
 
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
@@ -481,8 +482,6 @@ function soundTimeline() {
               CONGA_CONFIGURATION.player(dataconga[cardIndex][z][h][0]).start(
                 time + y * 0.15 + h * 0.001 + 0.006
               );
-              console.log("conga");
-              console.log(time + y * 0.15 + h * 0.001 + 0.006);
             }
           }
         }
@@ -495,13 +494,14 @@ function soundTimeline() {
                 datadrums[cardIndex][z][h][0]
               );
               player.start(time + y * 0.15 + h * 0.001 + 0.015);
-              console.log("drums");
-              console.log(time + y * 0.15 + h * 0.001 + 0.015);
             }
           }
         }
       }
     }
+    Tone.Draw.schedule(function() {
+      nextanim();
+    }, time);
     cardIndex++;
     if (cardIndex >= highestlength) {
       cardIndex = 0;
