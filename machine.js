@@ -320,7 +320,9 @@ function instrumentConfiguration(selection) {
       );
       break;
     case "drums":
+      let limit = new Tone.Limiter(-20).toDestination();
       instrument = new Tone.Players().toDestination();
+      instrument.connect(limit);
       instrument.add(
         "Tom 1",
         new Tone.ToneAudioBuffer(
@@ -463,13 +465,20 @@ function soundTimeline() {
                 );
               }
             }
-
-            
+          }
+        }
+        if (i === -1) {
+          for (let z = 0; z < datadrums[i].length; z++) {
+            for (let h = 0; h < 6; h++) {
+              if (datadrums[i][z][h][y] === true) {
+                let player = DRUMS_CONFIGURATION.player(datadrums[i][z][h][0]);
+                player.start(time + i * 2.4 + y * 0.15 + h * 0.001 + 0.007);
+              }
+            }
           }
         }
       }
     }
   }, Tone.Time(2.4 * highestlength).toSeconds()).start(0);
-
   Tone.Transport.start();
 }
