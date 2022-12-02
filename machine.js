@@ -92,6 +92,9 @@ const DRUMS_KIT_LIST = [
 ];
 let INSTRUMENT_SELECTION = "";
 let INSTRUMENT_CONFIGURATION = null;
+let SYNTH_CONFIGURATION = null;
+let CONGA_CONFIGURATION = null;
+let DRUMS_CONFIGURATION = null;
 let DRUMS_KIT = "breakbeat13";
 
 export async function initSound() {
@@ -115,6 +118,9 @@ export async function initSound() {
   document
     .querySelector("#timelinePause")
     .addEventListener("click", stopMachine);
+  SYNTH_CONFIGURATION = instrumentConfiguration("synth");
+  CONGA_CONFIGURATION = instrumentConfiguration("conga");
+  DRUMS_CONFIGURATION = instrumentConfiguration("drums");
 }
 
 //lit l'instrument selectionné et vérifie si il existe
@@ -126,7 +132,7 @@ function readInstrumentSelection() {
   }
   INSTRUMENT_SELECTION = block.value;
   generateMachineGrid(INSTRUMENT_SELECTION);
-  instrumentConfiguration();
+  INSTRUMENT_CONFIGURATION = instrumentConfiguration(INSTRUMENT_SELECTION);
 }
 
 //génère la grille de la machine en fonction de l'instrument selectionné
@@ -262,9 +268,9 @@ function readCard(machineGrid) {
 }
 
 //configure la machine en fonction de l'instrument choisi
-function instrumentConfiguration() {
+function instrumentConfiguration(selection) {
   let instrument;
-  switch (INSTRUMENT_SELECTION) {
+  switch (selection) {
     case "synth":
       instrument = new Tone.MonoSynth(INSTRUMENTS[0].options).toDestination();
       break;
@@ -371,7 +377,7 @@ function instrumentConfiguration() {
       );
       break;
   }
-  INSTRUMENT_CONFIGURATION = instrument;
+  return instrument;
 }
 
 function stopMachine() {
@@ -429,16 +435,41 @@ function soundTimeline() {
   let datasynth = readMachineSelection("timeline", "synth");
   let dataconga = readMachineSelection("timeline", "conga");
   let datadrums = readMachineSelection("timeline", "drums");
+  let synthlength = datasynth.length;
+  let congalength = dataconga.length;
+  let drumslength = datadrums.length;
+  let highestlength = Math.max(synthlength, congalength, drumslength);
   console.log(datasynth);
   console.log(dataconga);
   console.log(datadrums);
+  console.log("highest : " + highestlength);
 
   document
     .querySelector("#machine-pause")
     .addEventListener("click", stopMachine);
   document.querySelector("#addButton").addEventListener("click", stopMachine);
 
-  
+  new Tone.Loop((time) => {
+    console.log("loop");
+    for (let i = 0; i < highestlength; i++) {
+      console.log("card");
+      for (let y = 1; y < 17; y++) {
+        if (i < congalength) {
+          for (let z = 0; z < dataconga[i].length; z++) {
+            for (let h = 0; h < 7; h++) {
+              if (dataconga[i][z][h][y] === true) {
+                CONGA_CONFIGURATION.player(dataconga[i][z][h][0]).start(
+                  time + i * 2.4 + y * 0.15 + h * 0.001
+                );
+              }
+            }
 
-  //TODO jouer la machine avec les datas
+            
+          }
+        }
+      }
+    }
+  }, Tone.Time(2.4 * highestlength).toSeconds()).start(0);
+
+  Tone.Transport.start();
 }
